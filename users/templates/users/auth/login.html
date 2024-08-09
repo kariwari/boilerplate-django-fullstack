@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+  <div style="border-top: 2px  dashed;
+              border-bottom: 2px dashed;
+              padding: 20px;
+              max-width: 400px">
+    <h3>Login with your credentials</h3>
+    <form>
+      <div>
+        <label for="first">Username:</label>
+        <input type="text"
+               id="first"
+               name="first"
+               placeholder="Enter your Username"
+               required>
+      </div>
+      <br>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password"
+               id="password"
+               name="password"
+               placeholder="Enter your Password"
+               required>
+      </div>
+      <br>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+    <p>
+      <a href="{% url 'users:forgot-password' %}">Forgot Password?</a>
+    </p>
+    <p>
+      Not registered?
+      <a href="{% url 'users:register' %}" style="text-decoration: none;">Create an account</a>
+    </p>
+  </div>
+{% endblock content %}

@@ -1,0 +1,28 @@
+# Django
+*.sqlite3
+db.*
+staticfiles/
+mediafiles/photos/*
+mediafiles/uploads/*
+migrations/
+__pycache__/
+development.py
+.pytest_cache/
+.ruff_cache
+
+
+# IDE Setting
+.vscode/*
+.idea/*
+.history
+
+
+# Environments 
+.env 
+.env.prod
+.venv 
+env/ 
+venv/ 
+ENV/ 
+env.bak/ 
+venv.bak/ 

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+    <div style="border-top: 2px  dashed;
+                border-bottom: 2px dashed;
+                padding: 20px;
+                max-width: 400px">
+        <h3>Register your account</h3>
+        <form action="">
+            <div>
+                <label for="username">Username:</label>
+                <input type="text"
+                       id="username"
+                       name="username"
+                       placeholder="Enter your Username"
+                       required>
+            </div>
+            <br>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       placeholder="Enter your Email"
+                       required>
+            </div>
+            <br>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password"
+                       id="password"
+                       name="password"
+                       placeholder="Enter your Password"
+                       required>
+            </div>
+            <br>
+            <div>
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password"
+                       id="confirm_password"
+                       name="confirm_password"
+                       placeholder="Enter your Password again"
+                       required>
+            </div>
+            <br>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+        <p>
+            Already have an account? ?
+            <a href="{% url 'users:login' %}" style="text-decoration: none;">Login here</a>
+        </p>
+    </div>
+{% endblock content %}
