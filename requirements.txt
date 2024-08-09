@@ -1,0 +1,11 @@
+Django==5.1
+django-browser-reload==1.13.0
+django-debug-toolbar==4.4.6
+django-rq==2.10.2
+djlint==1.34.1
+pillow==10.4.0
+psycopg2-binary==2.9.9
+python-decouple==3.8
+redis==5.0.8
+ruff==0.5.7
+whitenoise==6.7.0
