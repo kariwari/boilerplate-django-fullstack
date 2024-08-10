@@ -3,9 +3,13 @@ from django.contrib.auth.forms import (
     UserCreationForm,
     UserChangeForm,
     PasswordChangeForm,
+    PasswordResetForm,
 )
 from django.contrib.auth import get_user_model
+from django.template import loader
+import django_rq
 
+from django_project.tasks import send_email_task
 from .models import Profile
 
 UserModel = get_user_model()
@@ -72,6 +76,30 @@ class UserLoginForm(forms.Form):
         ),
         error_messages={"required": "Password must be filled"},
     )
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def send_mail(
+        self,
+        subject_template_name,
+        email_template_name,
+        context,
+        from_email,
+        to_email,
+        html_email_template_name=None,
+    ):
+        """
+        Send a django.core.mail.EmailMultiAlternatives to `to_email` using django-rq.
+        """
+        subject = loader.render_to_string(subject_template_name, context)
+        subject = "".join(subject.splitlines())
+
+        html_body = None
+        if html_email_template_name:
+            html_body = loader.render_to_string(html_email_template_name, context)
+
+        # Enqueue the email sending task
+        django_rq.enqueue(send_email_task, subject, html_body, to_email)
 
 
 class ProfileForm(forms.ModelForm):

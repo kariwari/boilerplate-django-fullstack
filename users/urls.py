@@ -7,7 +7,7 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView,
 )
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 
 from .views import (
@@ -16,17 +16,22 @@ from .views import (
     UserLoginView,
     UserLogoutView,
     UserProfileView,
-    #     ListAddressView,
-    #     UpdateOrCreateAddressView,
-    #     DeleteAddressView,
 )
 
-from .forms import CustomPasswordChangeForm
+from .forms import CustomPasswordChangeForm, CustomPasswordResetForm
 
 app_name = "users"
 urlpatterns = [
+    # Profile
+    path("", RedirectView.as_view(url=reverse_lazy("users:profile"))),
     path(
-        "register/",
+        "profile/",
+        UserProfileView.as_view(),
+        name="profile",
+    ),
+    # Authentication
+    path(
+        "auth/register/",
         UserRegisterView.as_view(),
         name="register",
     ),
@@ -36,31 +41,11 @@ urlpatterns = [
         name="verify_email",
     ),
     path(
-        "login/",
+        "auth/login/",
         UserLoginView.as_view(),
         name="login",
     ),
-    path("logout/", UserLogoutView.as_view(), name="logout"),
-    path(
-        "forgot-password/",
-        TemplateView.as_view(template_name="users/auth/forgot-password.html"),
-        name="forgot-password",
-    ),
-    path(
-        "set-new-password/",
-        TemplateView.as_view(template_name="users/auth/set-new-password.html"),
-        name="set-new-password",
-    ),
-    path(
-        "",
-        UserProfileView.as_view(),
-        name="profile",
-    ),
-    # path(
-    #     "change-password/",
-    #     TemplateView.as_view(template_name="users/change-password.html"),
-    #     name="change-password",
-    # ),
+    path("auth/logout/", UserLogoutView.as_view(), name="logout"),
     # Change Password
     path(
         "profile/change-password/",
@@ -78,4 +63,48 @@ urlpatterns = [
         ),
         name="password_change_done",
     ),
+    # Password Reset
+    path(
+        "auth/password-reset/",
+        PasswordResetView.as_view(
+            template_name="users/auth/password_reset_form.html",
+            form_class=CustomPasswordResetForm,
+            email_template_name="users/email/password_reset_email.html",
+            html_email_template_name="users/email/password_reset_email.html",
+            success_url=reverse_lazy("users:password_reset_done"),
+        ),
+        name="password_reset",
+    ),
+    path(
+        "auth/password-reset-sent/",
+        PasswordResetDoneView.as_view(
+            template_name="users/auth/password_reset_done.html"
+        ),
+        name="password_reset_done",
+    ),
+    path(
+        "auth/password-reset/<uidb64>/<token>/",
+        PasswordResetConfirmView.as_view(
+            template_name="users/auth/password_reset_confirm.html",
+            success_url=reverse_lazy("users:password_reset_complete"),
+        ),
+        name="password_reset_confirm",
+    ),
+    path(
+        "auth/password-reset-complete/",
+        PasswordResetCompleteView.as_view(
+            template_name="users/auth/password_reset_complete.html"
+        ),
+        name="password_reset_complete",
+    ),
+    # path(
+    #     "forgot-password/",
+    #     TemplateView.as_view(template_name="users/auth/forgot-password.html"),
+    #     name="forgot-password",
+    # ),
+    # path(
+    #     "set-new-password/",
+    #     TemplateView.as_view(template_name="users/auth/set-new-password.html"),
+    #     name="set-new-password",
+    # ),
 ]
