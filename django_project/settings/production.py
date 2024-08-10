@@ -1,4 +1,4 @@
-from decouple import config
+from decouple import config, Csv
 
 from django_project.settings.base import *  # noqa: F403
 
@@ -7,22 +7,22 @@ from django_project.settings.base import *  # noqa: F403
 SECRET_KEY = config("SECRET_KEY")
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = config("DEBUG", cast=bool)
+DEBUG = config("DEBUG", default=True, cast=bool)
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["example.com"]
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
 
-CSRF_TRUSTED_ORIGINS = ["https://example.com"]
+CSRF_TRUSTED_ORIGINS = config("BASE_URL", default="localhost,127.0.0.1", cast=Csv())
 
 # For Docker/PostgreSQL usage uncomment this and comment the DATABASES config above
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DB_NAME"),
-        "USER": config("DB_USER"),
-        "PASSWORD": config("DB_PASSWORD"),
-        "HOST": config("DB_HOST"),
-        "PORT": config("DB_PORT"),
+        "NAME": config("POSTGRES_DB"),
+        "USER": config("POSTGRES_USER"),
+        "PASSWORD": config("POSTGRES_PASSWORD"),
+        "HOST": config("POSTGRES_HOST"),
+        "PORT": config("POSTGRES_PORT"),
     }
 }
 
@@ -37,14 +37,14 @@ RQ_QUEUES = {
 }
 RQ_SHOW_ADMIN_LINK = True
 
+# https://docs.djangoproject.com/en/5.0/ref/files/storage/
+# https://whitenoise.readthedocs.io/en/latest/django.html
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-        "OPTIONS": {"location": "media"},
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
-        "OPTIONS": {"location": "static"},
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
