@@ -106,7 +106,7 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth
 LOGIN_URL = "users:login"
-LOGIN_REDIRECT_URL = "frontpage"
+# LOGIN_REDIRECT_URL = "frontpage"
 LOGOUT_REDIRECT_URL = LOGIN_URL
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend

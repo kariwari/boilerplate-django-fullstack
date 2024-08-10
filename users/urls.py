@@ -13,9 +13,9 @@ from django.views.generic import TemplateView
 from .views import (
     #     EmailVerificationView,
     UserRegisterView,
-    #     UserLoginView,
-    #     UserLogoutView,
-    #     UserProfileView,
+    UserLoginView,
+    UserLogoutView,
+    UserProfileView,
     #     ListAddressView,
     #     UpdateOrCreateAddressView,
     #     DeleteAddressView,
@@ -32,9 +32,10 @@ urlpatterns = [
     ),
     path(
         "login/",
-        TemplateView.as_view(template_name="users/auth/login.html"),
+        UserLoginView.as_view(),
         name="login",
     ),
+    path("logout/", UserLogoutView.as_view(), name="logout"),
     path(
         "forgot-password/",
         TemplateView.as_view(template_name="users/auth/forgot-password.html"),
@@ -47,7 +48,7 @@ urlpatterns = [
     ),
     path(
         "",
-        TemplateView.as_view(template_name="users/profile.html"),
+        UserProfileView.as_view(),
         name="profile",
     ),
     path(

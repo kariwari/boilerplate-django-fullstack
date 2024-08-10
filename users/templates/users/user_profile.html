@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+    <div style="border-top: 2px  dashed;
+                border-bottom: 2px dashed;
+                padding: 20px;
+                max-width: 450px">
+        <h3>Your Profile</h3>
+        {% if messages %}
+            {% for message in messages %}<div style="color: {{ message.tags }};" role="alert">{{ message|safe }}</div>{% endfor %}
+            <br />
+        {% endif %}
+        <img src="{{ request.user.profile.photo.url }}" width="50">
+        <br />
+        <br />
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div>
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
+                {{ form.email }}
+                <br />
+                {% if form.email.errors %}
+                    <small style="color: red;">
+                        {% for error in form.email.errors %}{{ error }}{% endfor %}
+                    </small>
+                {% endif %}
+            </div>
+            <br />
+            <div>
+                <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label_tag }}</label>
+                {{ form.first_name }}
+                <br />
+                {% if form.first_name.errors %}
+                    <small style="color: red;">
+                        {% for error in form.first_name.errors %}{{ error }}{% endfor %}
+                    </small>
+                {% endif %}
+            </div>
+            <br />
+            <div>
+                <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label_tag }}</label>
+                {{ form.last_name }}
+                <br />
+                {% if form.last_name.errors %}
+                    <small style="color: red;">
+                        {% for error in form.last_name.errors %}{{ error }}{% endfor %}
+                    </small>
+                {% endif %}
+            </div>
+            <br />
+            <div>
+                <label for="{{ form.photo.id_for_label }}">{{ form.photo.label_tag }}</label>
+                <br />
+                {{ form.photo }}
+                <br />
+                {% if form.photo.errors %}
+                    <small style="color: red;">
+                        {% for error in form.photo.errors %}{{ error }}{% endfor %}
+                    </small>
+                {% endif %}
+            </div>
+            <br />
+            <button type="submit">Update Profile</button>
+        </form>
+        <p>
+            Want to change your password? <a href="{% url 'users:change-password' %}">Change Password</a>
+        </p>
+        <p>
+            <form method="post" action="{% url 'users:logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </p>
+    </div>
+{% endblock content %}
