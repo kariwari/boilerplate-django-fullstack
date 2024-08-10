@@ -66,6 +66,43 @@ This boilerplate comes with essential user management features (users app), incl
 
 Access the application in your browser at `http://localhost:8000`.
 
+
+## Running with Docker
+
+This project can also be run using Docker. Follow these steps:
+
+1. Make sure you have Docker and Docker Compose installed on your system.
+
+2. Build the Docker image:
+
+    ```bash
+    docker compose build
+    ```
+
+3. Run the containers:
+
+    ```bash
+    docker compose up
+    ```
+
+4. The application will be available at `http://localhost:8000`.
+
+5. To run migrations inside the Docker container:
+
+    ```bash
+    docker compose run web python manage.py makemigrations
+    docker compose run web python manage.py migrate
+    ```
+
+6. To create a superuser:
+
+    ```bash
+    docker compose run web python manage.py createsuperuser
+    ```
+
+> **Note**: The Docker setup includes a Redis container for background tasks.    
+
+
 ## Customization
 
 - Add new apps by running `python manage.py startapp app_name`
