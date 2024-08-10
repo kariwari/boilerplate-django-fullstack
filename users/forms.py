@@ -1,5 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import (
+    UserCreationForm,
+    UserChangeForm,
+    PasswordChangeForm,
+)
 from django.contrib.auth import get_user_model
 
 from .models import Profile
@@ -92,6 +96,36 @@ class ProfileForm(forms.ModelForm):
                     "placeholder": "Enter your {fieldname}".format(
                         fieldname=field.label
                     ),
+                }
+            )
+
+        for field in self.fields.values():
+            field.error_messages = {
+                "required": "{fieldname} must be filled".format(fieldname=field.label),
+            }
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomPasswordChangeForm, self).__init__(*args, **kwargs)
+
+        self.fields["old_password"].label = "Old Password"
+        self.fields["new_password1"].label = "New Password"
+        self.fields["new_password2"].label = "Confirm New Password"
+
+        self.error_messages["password_mismatch"] = (
+            "Password does not match. Please try again."
+        )
+        self.error_messages["password_incorrect"] = (
+            "Your old password was entered incorrectly. Please re-enter it."
+        )
+
+        for name, field in self.fields.items():
+            field.help_text = None
+
+            field.widget.attrs.update(
+                {
+                    "placeholder": "Enter {fieldname}".format(fieldname=field.label),
                 }
             )
 

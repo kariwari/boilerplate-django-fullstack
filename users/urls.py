@@ -1,12 +1,12 @@
 from django.urls import path, reverse_lazy
 
-# from django.contrib.auth.views import (
-#     PasswordChangeView,
-#     PasswordResetView,
-#     PasswordResetDoneView,
-#     PasswordResetConfirmView,
-#     PasswordResetCompleteView,
-# )
+from django.contrib.auth.views import (
+    PasswordChangeView,
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
 from django.views.generic import TemplateView
 
 
@@ -21,7 +21,7 @@ from .views import (
     #     DeleteAddressView,
 )
 
-# from .forms import CustomPasswordResetForm, CustomPasswordChangeForm
+from .forms import CustomPasswordChangeForm
 
 app_name = "users"
 urlpatterns = [
@@ -51,9 +51,26 @@ urlpatterns = [
         UserProfileView.as_view(),
         name="profile",
     ),
+    # path(
+    #     "change-password/",
+    #     TemplateView.as_view(template_name="users/change-password.html"),
+    #     name="change-password",
+    # ),
+    # Change Password
     path(
-        "change-password/",
-        TemplateView.as_view(template_name="users/change-password.html"),
-        name="change-password",
+        "profile/change-password/",
+        PasswordChangeView.as_view(
+            template_name="users/auth/password_change_form.html",
+            form_class=CustomPasswordChangeForm,
+            success_url=reverse_lazy("users:password_change_done"),
+        ),
+        name="password_change",
+    ),
+    path(
+        "profile/change-password/done/",
+        TemplateView.as_view(
+            template_name="users/auth/password_change_done.html",
+        ),
+        name="password_change_done",
     ),
 ]

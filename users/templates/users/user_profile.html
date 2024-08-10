@@ -62,7 +62,7 @@
             <button type="submit">Update Profile</button>
         </form>
         <p>
-            Want to change your password? <a href="{% url 'users:change-password' %}">Change Password</a>
+            Want to change your password? <a href="{% url 'users:password_change' %}">Change Password</a>
         </p>
         <p>
             <form method="post" action="{% url 'users:logout' %}">
