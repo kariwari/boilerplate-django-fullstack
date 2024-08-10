@@ -48,6 +48,7 @@ This boilerplate comes with essential user management features (users app), incl
 5. Run migrations:
 
     ```bash
+    python manage.py makemigrations
     python manage.py migrate
     ```
 
