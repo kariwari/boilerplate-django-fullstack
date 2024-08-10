@@ -76,7 +76,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # https://docs.djangoproject.com/en/dev/topics/i18n/
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = "id-ID"
+LANGUAGE_CODE = "en-US"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
 TIME_ZONE = "Asia/Jakarta"
@@ -102,7 +102,7 @@ MESSAGE_TAGS = {
 }
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#std-setting-AUTH_USER_MODEL
-# AUTH_USER_MODEL = "users.CustomUser"
+AUTH_USER_MODEL = "users.CustomUser"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth
 LOGIN_URL = "users:login"
