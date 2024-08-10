@@ -1,10 +1,16 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.template.loader import render_to_string
+from django.contrib.sites.models import Site
+from django.utils import timezone
 import uuid
 import os
+import django_rq
 
+from django_project.tasks import send_email_task
 from .utils import CustomUserManager, photo_path
 
 
@@ -28,6 +34,48 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+class EmailAddress(models.Model):
+    user = models.OneToOneField(
+        CustomUser, related_name="email_address", on_delete=models.CASCADE
+    )
+    email = models.EmailField(unique=True)
+    is_verified = models.BooleanField(default=False)
+    verification_token = models.UUIDField(
+        default=uuid.uuid4, blank=True, null=True, unique=True
+    )
+    sent_at = models.DateTimeField(null=True, blank=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.email
+
+    def send_verification_email(self):
+        current_site = Site.objects.get_current()
+        verification_link = reverse(
+            "users:verify_email", args=[self.verification_token]
+        )
+        verification_url = f"http://{current_site.domain}{verification_link}"
+
+        subject = "Verifikasi Email Anda"
+        message = render_to_string(
+            "users/email/email_confirmation_message.html",
+            {
+                "verification_url": verification_url,
+                "user": self.user,
+            },
+        )
+
+        django_rq.enqueue(
+            send_email_task,
+            subject=subject,
+            message=message,
+            to_email=self.email,
+        )
+
+        self.sent_at = timezone.now()
+        self.save()
 
 
 class Profile(models.Model):

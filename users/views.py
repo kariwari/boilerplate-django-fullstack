@@ -5,9 +5,13 @@ from django.contrib.auth import get_user_model
 from django.views.generic import View, CreateView, UpdateView
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
+from django.template.loader import render_to_string
+import django_rq
 
+from django_project.tasks import send_email_task
 from .forms import UserRegisterForm, UserLoginForm, ProfileForm
-from .models import Profile
+from .models import EmailAddress, Profile
 
 UserModel = get_user_model()
 
@@ -36,6 +40,37 @@ class UserRegisterView(CreateView):
             f"Please check your email <strong>{email}</strong> to verify your account.",
         )
         return response
+
+
+class EmailVerificationView(View):
+    def get(self, request, token, *args, **kwargs):
+        try:
+            email_address = EmailAddress.objects.get(verification_token=token)
+            email_address.is_verified = True
+            email_address.verification_token = None  # Hapus token setelah verifikasi
+            email_address.verified_at = timezone.now()
+            email_address.save()
+
+            subject = "Welcome to Our Website"
+            html_message = render_to_string(
+                "users/email/welcome_email.html", {"user": email_address.user}
+            )
+
+            # Gunakan task send_email yang telah ada untuk mengirim email
+            django_rq.enqueue(
+                send_email_task,
+                subject=subject,
+                message=html_message,
+                to_email=email_address.email,
+            )
+
+            messages.success(
+                request, "Your email has been successfully verified. You can now login."
+            )
+            return redirect("users:login")
+        except EmailAddress.DoesNotExist:
+            messages.error(request, "Invalid verification token.")
+            return redirect("users:login")
 
 
 class UserLoginView(View):

@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 
 
 from .views import (
-    #     EmailVerificationView,
+    EmailVerificationView,
     UserRegisterView,
     UserLoginView,
     UserLogoutView,
@@ -29,6 +29,11 @@ urlpatterns = [
         "register/",
         UserRegisterView.as_view(),
         name="register",
+    ),
+    path(
+        "auth/verify-email/<uuid:token>/",
+        EmailVerificationView.as_view(),
+        name="verify_email",
     ),
     path(
         "login/",

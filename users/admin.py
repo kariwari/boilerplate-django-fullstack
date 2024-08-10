@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Profile
+from .models import CustomUser, EmailAddress, Profile
 
 
 @admin.register(CustomUser)
@@ -58,6 +58,23 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ("email",)
     ordering = ("email",)
+
+
+@admin.register(EmailAddress)
+class EmailAddressAdmin(admin.ModelAdmin):
+    """
+    Kelas admin untuk mengelola model Flash Sale di panel admin Django.
+    """
+
+    list_display = (
+        "user",
+        "email",
+        "is_verified",
+        "verification_token",
+        "sent_at",
+        "verified_at",
+    )
+    list_per_page = 15
 
 
 @admin.register(Profile)
