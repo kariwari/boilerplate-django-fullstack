@@ -61,7 +61,8 @@ This boilerplate comes with essential user management features (users app), incl
 7. To run the development server:
 
     ```bash
-    python manage.py runserver
+    python manage.py runserver # for django
+    python manage.py rqworker default # for django-rq worker
     ```
 
 Access the application in your browser at `http://localhost:8000`.
